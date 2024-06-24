@@ -76,3 +76,30 @@ A2.timestamp > A1.timestamp
 group BY A1.machine_id;
 
 
+-- 577. Employee Bonus
+-- Table: Employee
+-- +-------------+---------+
+-- | Column Name | Type    |
+-- +-------------+---------+
+-- | empId       | int     |
+-- | name        | varchar |
+-- | supervisor  | int     |
+-- | salary      | int     |
+-- +-------------+---------+
+-- Table: Bonus
+-- +-------------+------+
+-- | Column Name | Type |
+-- +-------------+------+
+-- | empId       | int  |
+-- | bonus       | int  |
+-- +-------------+------+
+-- Write a solution to report the name and bonus amount of each employee with a bonus less than 1000.
+# Write your MySQL query statement below
+SELECT 
+  E.NAME, 
+  COALESCE(B.BONUS, NULL) AS BONUS
+FROM 
+  EMPLOYEE E
+  LEFT JOIN BONUS B ON E.EMPID = B.EMPID
+WHERE 
+  B.BONUS < 1000 OR B.BONUS IS NULL;
