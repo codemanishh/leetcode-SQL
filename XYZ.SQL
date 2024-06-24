@@ -24,3 +24,55 @@ where visit_id not in (
         where amount is not null
     )
 group by customer_id;
+
+-- 1661. Average Time of Process per Machine
+-- Table: Activity
+-- +----------------+---------+
+-- | Column Name    | Type    |
+-- +----------------+---------+
+-- | machine_id     | int     |
+-- | process_id     | int     |
+-- | activity_type  | enum    |
+-- | timestamp      | float   |
+-- +----------------+---------+
+-- Input: 
+-- Activity table:
+-- +------------+------------+---------------+-----------+
+-- | machine_id | process_id | activity_type | timestamp |
+-- +------------+------------+---------------+-----------+
+-- | 0          | 0          | start         | 0.712     |
+-- | 0          | 0          | end           | 1.520     |
+-- | 0          | 1          | start         | 3.140     |
+-- | 0          | 1          | end           | 4.120     |
+-- | 1          | 0          | start         | 0.550     |
+-- | 1          | 0          | end           | 1.550     |
+-- | 1          | 1          | start         | 0.430     |
+-- | 1          | 1          | end           | 1.420     |
+-- +------------+------------+---------------+-----------+
+-- Output: 
+-- +------------+-----------------+
+-- | machine_id | processing_time |
+-- +------------+-----------------+
+-- | 0          | 0.894           |
+-- | 1          | 0.995           |
+-- +------------+-----------------+
+-- Explanation: 
+-- There are 3 machines running 2 processes each.
+-- Machine 0's average time is ((1.520 - 0.712) + (4.120 - 3.140)) / 2 = 0.894
+-- Machine 1's average time is ((1.550 - 0.550) + (1.420 - 0.430)) / 2 = 0.995
+-- Machine 2's average time is ((4.512 - 4.100) + (5.000 - 2.500)) / 2 = 1.456
+
+select A1.machine_id, ROUND(AVG( A2.timestamp - A1.timestamp),3) AS processing_time 
+FROM
+ACTIVITY A1
+JOIN 
+ACTIVITY A2
+ON
+A1.machine_id=A2.machine_id 
+and
+A1.process_id=A2.process_id
+AND 
+A2.timestamp > A1.timestamp
+group BY A1.machine_id;
+
+
